@@ -2,7 +2,7 @@ name: Update CloudflareSpeedTest CSV
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # 北京时间每天 00:00（UTC 16:00）
+    - cron: '0 16 * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,12 +18,16 @@ jobs:
       - name: Run CloudflareSpeedTest
         run: |
           chmod +x ./cfst
-          ./cfst -tl 300 -dn 20 -sl 0.01 -o result.csv
+          ./cfst -tl 300 -dn 20 -sl 1 -o result.csv
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add result.csv
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update result.csv"
+          if git diff --cached --quiet; then
+            echo "result.csv 没有变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "Auto-update result.csv"
           git push
