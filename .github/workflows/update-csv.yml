@@ -2,7 +2,7 @@ name: Update CloudflareSpeedTest CSV
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # 北京时间每天 00:00（UTC 16:00）
+    - cron: '0 16 * * *'   
   workflow_dispatch:
 
 permissions:
@@ -18,7 +18,7 @@ jobs:
       - name: Run CloudflareSpeedTest
         run: |
           chmod +x ./cfst
-          ./cfst -o result.csv
+          ./cfst -dn 20 -o result.csv
 
       - name: Commit and push if changed
         run: |
