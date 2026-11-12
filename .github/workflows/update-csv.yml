@@ -18,7 +18,9 @@ jobs:
       - name: Run CloudflareSpeedTest
         run: |
           chmod +x ./cfst
-          ./cfst -tl 300 -dn 20 -o result.csv
+          ./cfst -tl 200 -dn 20 -o result-full.csv
+          head -n 21 result-full.csv > result.csv
+          rm result-full.csv
 
       - name: Commit and push if changed
         run: |
