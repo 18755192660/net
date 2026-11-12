@@ -1,1 +1,31 @@
+name: Update CloudflareSpeedTest CSV
 
+on:
+  schedule:
+    - cron: '0 16 * * *'  
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download and run CloudflareSpeedTest
+        run: |
+          wget -N https://github.com/XIU2/CloudflareSpeedTest/releases/latest/download/cfst_linux_amd64.tar.gz
+          tar -zxf cfst_linux_amd64.tar.gz
+          chmod +x cfst
+          ./cfst -o result.csv
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add result.csv
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update result.csv"
+          git push
