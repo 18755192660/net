@@ -2,7 +2,7 @@ name: Update CloudflareSpeedTest CSV
 
 on:
   schedule:
-    - cron: '0 18 * * *'   # 每天 UTC 18:00（北京时间凌晨 2 点）
+    - cron: '0 16 * * *'   # 北京时间每天 00:00（UTC 16:00）
   workflow_dispatch:
 
 permissions:
@@ -19,8 +19,8 @@ jobs:
         run: |
           wget -N https://github.com/XIU2/CloudflareSpeedTest/releases/latest/download/cfst_linux_amd64.tar.gz
           tar -zxf cfst_linux_amd64.tar.gz
-          chmod +x cfst
-          ./cfst -o result.csv
+          chmod +x CloudflareST
+          ./CloudflareST -o result.csv
 
       - name: Commit and push if changed
         run: |
